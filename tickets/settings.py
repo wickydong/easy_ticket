@@ -36,7 +36,7 @@ INSTALLED_APPS = (
     'django.contrib.sessions',
     'django.contrib.messages',
     'django.contrib.staticfiles',
-    'tickets',
+    'web_tickets',
 )
 
 MIDDLEWARE_CLASSES = (
@@ -50,7 +50,7 @@ MIDDLEWARE_CLASSES = (
     'django.middleware.clickjacking.XFrameOptionsMiddleware',
 )
 
-ROOT_URLCONF = 'tickets.urls'
+ROOT_URLCONF = 'web_tickets.urls'
 
 WSGI_APPLICATION = 'tickets.wsgi.application'
 
