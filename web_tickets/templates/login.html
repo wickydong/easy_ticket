@@ -1,9 +1,13 @@
 {% extends "index.html" %}
 {% block content %}
+{% if form.errors %}
+<p>error {{form.errors}}</p>
+{% endif %}
 <form action="/login_form/" method="post">
     {% csrf_token %}
-    <p>账号: <input type="text" name="user" /></p>
-    <p>密码: <input type="password" name="passwd" /></p>
+<p>
+{{ form.as_p }}
+</p>
     <input type="submit" value="确定" />
 </form>
 {% endblock %}
