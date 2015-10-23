@@ -15,3 +15,4 @@ class Tickets(models.Model):
     answer = models.CharField(max_length=30,null=True,blank=True)
     answer_msg = models.TextField()
     answer_time = models.DateTimeField(auto_now=True)
+    tks_status = models.CharField(max_length=30,default="nyet")

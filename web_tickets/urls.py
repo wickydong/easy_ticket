@@ -1,6 +1,6 @@
 from django.conf.urls import patterns, include, url
 from django.contrib import admin
-from web_tickets.views import index,login_form
+from web_tickets.views import index,login_form,my_tickets
 
 urlpatterns = patterns('',
     # Examples:
@@ -10,4 +10,5 @@ urlpatterns = patterns('',
     url(r'^admin/', include(admin.site.urls)),
     url('^$', index),
     url('^login_form/$', login_form),
+    url('^my_tickets/$', my_tickets),
 )
