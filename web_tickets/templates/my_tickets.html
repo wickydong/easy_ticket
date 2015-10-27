@@ -1,0 +1,15 @@
+{% extends "index.html" %}
+{% block content %}
+<div>
+<h3>我要发工单</h3>
+<a href="/my_tickets/select/server/">服务器权限开放</a>
+<a href="/my_tickets/select/upgrade/">系统升级</a>
+<a href="/my_tickets/select/virtual/">虚拟机申请</a>
+<a href="/my_tickets/select/update/">数据更新</a>
+<a href="/my_tickets/select/online/">线上紧急调整</a>
+</div>
+<hr>
+<div>
+{{ tickets }}
+</div>
+{% endblock%}

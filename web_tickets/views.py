@@ -1,11 +1,14 @@
 #! /usr/bin/python
 # -*- coding: utf-8 -*-
+# __author__: wickydong
 
 from django.shortcuts import render_to_response
 from django.template import RequestContext
-from web_tickets.forms import LoginForm
 from django.http import HttpResponseRedirect
 from web_tickets.models import UserAuth,Tickets
+from web_tickets.forms import LoginForm,ServerForm,UpgradeForm,VirtualForm,UpdateForm,OnlineForm
+
+
 def index(request):
     return render_to_response("index.html") 
 
@@ -25,12 +28,11 @@ def login_form(request):
             except UserAuth.DoesNotExist:
                 print "Message Is DoesNotExist"
     else:
-        #if request.session.get("status",False):   #用户已登录则跳转
+        #if request.session.get("status",False):   #用户已登录则跳转,上线需开启
         #    return HttpResponseRedirect("/my_tickets/")
         form = LoginForm()
-    return render_to_response("login.html",{"form": form},context_instance=RequestContext(request))
-    #return render_to_response("login_form.html",{"user":user,"passwd":passwd})#,context_instance=RequestContext(request))
-
+    return render_to_response("login.html",{"form": form},\
+                                            context_instance=RequestContext(request))
 
 def my_tickets(request):
    if request.session.get("status",False):
@@ -46,6 +48,30 @@ def my_tickets(request):
             else:
                 tickets = Tickets.objects.filter(user=request.session.get("user"))
             return render_to_response("my_tickets.html",{"tickets": tickets})
+
+def tickets(request,t_type):
+    if request.session.get("status",False) and request.method == "GET":
+        try:
+            t_type = str(t_type)
+        except ValueError:
+            raise Http404()
+        if t_type == "server":
+            form = ServerForm()
+        if t_type == "upgrade":
+            form = UpgradeForm()
+        if t_type == "virtual":
+            form = VirtualForm()
+        if t_type == "update":
+            form = UpdateForm()
+        if t_type == "online":
+            form = OnlineForm()
+        return render_to_response("send_tickets.html",{"form":form},\
+                                   context_instance=RequestContext(request))
+
+
+
+
+
             
          
     
