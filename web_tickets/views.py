@@ -6,7 +6,7 @@ from django.shortcuts import render_to_response
 from django.template import RequestContext
 from django.http import HttpResponseRedirect
 from web_tickets.models import UserAuth,Tickets
-from web_tickets.forms import LoginForm,ServerForm,UpgradeForm,VirtualForm,UpdateForm,OnlineForm
+from web_tickets.forms import LoginForm,ServerForm,UpgradeForm,VirtualForm,UpdateForm,FixForm
 
 
 def index(request):
@@ -32,7 +32,7 @@ def login_form(request):
         #    return HttpResponseRedirect("/my_tickets/")
         form = LoginForm()
     return render_to_response("login.html",{"form": form},\
-                                            context_instance=RequestContext(request))
+                  context_instance=RequestContext(request))
 
 def my_tickets(request):
    if request.session.get("status",False):
@@ -63,8 +63,8 @@ def tickets(request,t_type):
             form = VirtualForm()
         if t_type == "update":
             form = UpdateForm()
-        if t_type == "online":
-            form = OnlineForm()
+        if t_type == "fix":
+            form = FixForm()
         return render_to_response("send_tickets.html",{"form":form},\
                                    context_instance=RequestContext(request))
 

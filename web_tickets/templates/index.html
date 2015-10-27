@@ -2,14 +2,15 @@
 <html lang="zh-CN">
 <head>
 <meta charset="UTF-8">
+<link rel="stylesheet" href="/static/css/foundation.min.css" type="text/css">
 <!--<script type="text/javascript" src="/static/js/login.js"></script>--!>
-<link href="/static/css/style.css" rel="stylesheet" type="text/css">
+<!--link href="/static/css/style.css" rel="stylesheet" type="text/css"--!>
 <title>{% block title %}GridInfo's Tickets{% endblock %}</title>
 </head>
 <body>
 <h1>GridInfo's Tickets</h1>
 {% block content %}
-<a href="login_form">Sign IN</a>
+<a href="login_form" class="button success">Sign IN</a>
 {% endblock %}
 {% block footer %}
 <hr>
