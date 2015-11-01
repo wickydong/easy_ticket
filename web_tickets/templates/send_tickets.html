@@ -3,7 +3,7 @@
 {% if form.errors %}
 <p>error {{form.errors}}</p>
 {% endif %}
-<form action="/tickets/" method="post">
+<form action="/my_tickets/select/{{t_type}}/" method="post">
     {% csrf_token %}
 <p>
 {{ form.as_p }}
