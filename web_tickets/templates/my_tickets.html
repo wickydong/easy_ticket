@@ -9,9 +9,23 @@
 <a href="/my_tickets/select/fix/" class="button success">修复BUG</a>
 </div>
 <hr>
-<div>
+<table>
+<tr>
+<th>工单类型</th>
+<th>工单内容</th>
+<th>提交时间</th>
+</tr>
 {% for i in server %}
-{{i}}
+<tr>
+<td>{{i.tic_type}}</td>
+{%if i.tic_type == "virtual"%}
+<td>{{i.sys}}</td>
+{%else%}
+<td>{{i.msg}}</td>
+{%endif%}
+<td>{{i.create_time}}</td>
+<td>{{i.over_user}}</td>
+</tr>
 {% endfor %}
-</div>
+</table>
 {% endblock%}

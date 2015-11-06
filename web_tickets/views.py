@@ -10,6 +10,8 @@ from web_tickets.forms import *
 
 
 def index(request):
+    #if request.session.get("status",False):   #用户已登录则跳转,上线需开启
+    #    return HttpResponseRedirect("/my_tickets/")
     return render_to_response("index.html") 
 
 
@@ -38,24 +40,11 @@ def login_form(request):
 def my_tickets(request):
    if request.session.get("status",False):
         user = request.session.get("user")
-        #user_title = request.session.get("god")
         if request.method == "POST":      #GET请求展示工单,POST请求处理工单
             pass 
-            #if user_title == "yes":
-            #    pass
-            #else:
-            #    pass
         else:
-            #if user_title == "yes":
-            #    tickets = Tickets.objects.filter(tks_status="nyet")
-            #else:
-            server = Server.objects.filter(make_user=user)
-            upgrade = Upgrade.objects.filter(make_user=user)
-            virtual = Virtual.objects.filter(make_user=user)
-            fix = Fix.objects.filter(make_user=user)
-            update = Update.objects.filter(make_user=user)
-            return render_to_response("my_tickets.html",{"server":server,"upgrade":upgrade,\
-                                      "virtual":virtual,"fix":fix,"update":update})
+            server = AllForm.objects.filter(make_user=user)
+            return render_to_response("my_tickets.html",{"server":server.values()})
 
 def tickets(request,t_type):
     type_form = {
@@ -72,8 +61,15 @@ def tickets(request,t_type):
     if request.session.get("status",False) and request.method == "POST":
         form = type_form[t_type](request.POST)
         if form.is_valid():
-            form.make_user = "a"
-            form.save()
+            cd = form.cleaned_data 
+            make_user = form.save(commit=False)
+            make_user.make_user = request.session.get("user")
+            make_user.tic_type = t_type
+            make_user.save()
+            over = UserAuth.objects.get(user="kundong@gridinfo.com.cn")
+            print type(over)
+            make_user.over_user.add(over)
+            make_user.save_m2m()
             return HttpResponseRedirect("/my_tickets/")
     if request.session.get("status",False) and request.method == "GET":
         form = type_form[t_type]()
