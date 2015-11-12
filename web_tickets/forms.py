@@ -2,7 +2,12 @@
 from django import forms
 from web_tickets.models import *
 
-choices = (("bingchunmu@gridinfo.com.cn","秉淳"),("kundong@gridinfo.com.cn","董琨"),)
+choices = (("bingchunmu@gridinfo.com.cn","秉淳"),("kundong@gridinfo.com.cn","董琨"),\
+           ("lizhiluan@gridinfo.com.cn","栾立志"),("jikunzhang@gridinfo.com.cn","张继坤")
+
+
+
+)
 
 class LoginForm(forms.Form):
     user = forms.EmailField(max_length=30,error_messages={"required":"用户名不能为空"})

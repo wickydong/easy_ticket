@@ -21,12 +21,13 @@ class AllForm(models.Model):
     make_user = models.CharField(max_length=30,null=True)
     over_user = models.ManyToManyField(UserAuth)
     tic_type = models.CharField(max_length=30)
-    reply = models.IntegerField(default=0)
+    #reply = models.IntegerField(default=0)
+    reply = models.CharField(max_length=30,default="0")
 
 class FormMsg(models.Model):
     formid = models.AutoField(primary_key=True)
     tic_id = models.CharField(max_length=30)
-    queue = models.IntegerField(default=0) 
+    queue = models.CharField(max_length=30,default="0") 
     times = models.DateTimeField(auto_now=True)
     user = models.ForeignKey(UserAuth)
     msg = models.TextField()

@@ -46,13 +46,14 @@ def login_form(request):
     
 
 def my_tickets(request):
-   if request.session.get("status",False):
+    if request.session.get("status",False):
         user = request.session.get("user")
         if request.method == "POST":      #GET请求展示工单,POST请求处理工单
-            pass 
+            return HttpResponseRedirect("/")
         else:
             server = AllForm.objects.filter(make_user=user)
             return render_to_response("my_tickets.html",{"server":server.values()})
+    return HttpResponseRedirect("/")
 
 def tickets(request,t_type):
     type_form = {
@@ -92,19 +93,40 @@ def tickets(request,t_type):
 def reply(request,tic_id):
     try:
         tic_id = str(tic_id)
+        form_msg = AllForm.objects.get(tic_id=tic_id)
     except ValueError:
         raise Http404()
+    reply_msg = []
+    r_msg = []
+    behind = []
+    if int(form_msg.reply) != 0:
+        reply_msg = FormMsg.objects.filter(tic_id=tic_id).values()
+        for i in reply_msg:
+            formmsg_get = FormMsg.objects.get(formid=i["formid"])
+            come_from = formmsg_get.user.user
+            for n in formmsg_get.behind.values():
+                behind.append(n["user"])
+            a = [i["msg"],i["formid"],come_from,behind]
+            behind = []
+            r_msg.append(a)
+    print r_msg
     if request.session.get("status",False) and request.method == "POST":
-        pass
+        form = ReplyForm(request.POST)
+        user = request.session.get("user")
+        if form.is_valid():
+            cd = form.cleaned_data
+            reply = form.save(commit=False)
+            reply.tic_id = tic_id
+            reply.queue = str(int(form_msg.reply) + 1)
+            AllForm.objects.filter(tic_id=tic_id).update(reply=reply.queue)
+            reply.user = UserAuth.objects.get(user=str(user))
+            reply.save()
+            for i in cd["behind"]:
+                behind_user = UserAuth.objects.get(user=str(i))
+                behind = reply.behind.add(behind_user)
+            reply.save()
+            return HttpResponseRedirect("/my_tickets/")
     if request.session.get("status",False) and request.method == "GET":
-        try:
-            form_msg = AllForm.objects.get(tic_id=tic_id)
-        except:
-            raise Http404()
         form = ReplyForm()
-        reply_msg = []
-        if form_msg.reply != 0:
-            reply_msg = FormMsg.objects.filter(tic_id=tic_id)
-            print reply_msg
-        return render_to_response("reply.html",{"form_msg":form_msg,"reply_msg":reply_msg,\
+    return render_to_response("reply.html",{"form_msg":form_msg,"reply_msg":r_msg,\
                                     "form":form},context_instance=RequestContext(request))

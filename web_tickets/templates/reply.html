@@ -1,8 +1,23 @@
 {% extends "index.html" %}
 {% block content %}
-{{form_msg.tic_id}}
+{{form_msg}}
 {% if reply_msg %}
-{{reply_msg}}
+{% for i in reply_msg %}
+<p>
+{{i.2}} 跟 {% for a in i.3 %} {{a}} {% endfor %}说: {{i.0}} 
+</p>
+{% endfor %}
 {% endif %}
+<hr>
+
+{% if form.errors %}
+<p>error {{form.errors}}</p>
+{% endif %}
+<form action="/reply/{{form_msg.tic_id}}/" method="post">
+    {% csrf_token %}
+<p>
 {{form.as_p}}
+</p>
+<input type="submit" value="确定" />
+</form>
 {% endblock %}
