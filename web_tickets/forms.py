@@ -46,3 +46,11 @@ class UpdateForm(forms.ModelForm):
     name = forms.CharField(max_length=30,label="更新的项目:")
     howtime = forms.CharField(max_length=30,label="更新时间:")
     msg = forms.CharField(label="更新内容梗概:",widget=forms.Textarea)
+
+
+class ReplyForm(forms.ModelForm):
+    class Meta:
+        model = FormMsg
+        fields = ("msg","behind")
+    msg = forms.CharField(label="回复内容:",widget=forms.Textarea)
+    behind = forms.MultipleChoiceField(label="处理人:",choices=choices,widget=forms.CheckboxSelectMultiple)

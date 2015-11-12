@@ -21,10 +21,10 @@
 {%if i.tic_type == "virtual"%}
 <td>{{i.sys}}</td>
 {%else%}
-<td>{{i.msg}}</td>
+<td>{{i.name}}</td>
 {%endif%}
 <td>{{i.create_time}}</td>
-<td>{{i.over_user}}</td>
+<td><a href="/reply/{{i.tic_id}}">查看</td>
 </tr>
 {% endfor %}
 </table>
