@@ -7,15 +7,42 @@
 <a href="/my_tickets/select/virtual/" class="button success">虚拟机申请</a>
 <a href="/my_tickets/select/update/" class="button success">数据更新</a>
 <a href="/my_tickets/select/fix/" class="button success">修复BUG</a>
+<a href="/logout/" class="button secondary">退出登录</a>
 </div>
 <hr>
 <table>
+我的工单
 <tr>
 <th>工单类型</th>
 <th>工单内容</th>
 <th>提交时间</th>
 </tr>
+{% if server %}
 {% for i in server %}
+<tr>
+<td>{{i.tic_type}}</td>
+{%if i.tic_type == "virtual"%}
+<td>{{i.sys}}</td>
+{%else%}
+<td>{{i.name}}</td>
+{%endif%}
+<td>{{i.create_time}}</td>
+<td><a href="/reply/{{i.tic_id}}">查看</td>
+</tr>
+{% endfor %}
+{%else%}
+<p>目前尚没有您提交的工单</p>
+{%endif%}
+</table>
+<hr>
+<table>
+关于我的工单
+<tr>
+<th>工单类型</th>
+<th>工单内容</th>
+<th>提交时间</th>
+</tr>
+{% for i in overmsg %}
 <tr>
 <td>{{i.tic_type}}</td>
 {%if i.tic_type == "virtual"%}

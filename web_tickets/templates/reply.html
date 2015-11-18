@@ -1,10 +1,27 @@
 {% extends "index.html" %}
 {% block content %}
-{{form_msg}}
+<p>申请人:
+{{form_msg.make_user}}
+</p>
+<p>工单类型:
+{{form_msg.tic_type}}
+</p>
+<p>工单标题:
+{{form_msg.name}}
+</p>
+<p>工单梗概:
+{% if form_msg.sys %}
+{{form_msg.sys}}
+{% else %}
+{{form_msg.msg}}
+{% endif %}
+</p>
+<hr>
 {% if reply_msg %}
+<p>工单回复情况</p>
 {% for i in reply_msg %}
 <p>
-{{i.2}} 跟 {% for a in i.3 %} {{a}} {% endfor %}说: {{i.0}} 
+{{i.2}} : {{i.0}} {% for a in i.3 %}  @{{a}} {% endfor %} 
 </p>
 {% endfor %}
 {% endif %}
