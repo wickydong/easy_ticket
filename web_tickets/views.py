@@ -19,13 +19,14 @@ def now():
     return now
 
 def index(request):
-    #if request.session.get("status",False):   #用户已登录则跳转,上线需开启
-    #    return HttpResponseRedirect("/my_tickets/")
+    if request.session.get("status",False):   #用户已登录则跳转,上线需开启
+        return HttpResponseRedirect("/my_tickets/")
     return render_to_response("index.html") 
 
 def logout(request):
-    del request.session["user"]
-    del request.session["status"]
+    if request.session.get("user"):
+        del request.session["user"]
+        del request.session["status"]
     return HttpResponseRedirect("/login_form/")
 
 def login_form(request):
@@ -45,8 +46,8 @@ def login_form(request):
             except UserAuth.DoesNotExist:
                 print "Message Is DoesNotExist"
     else:
-        #if request.session.get("status",False):   #用户已登录则跳转,上线需开启
-        #    return HttpResponseRedirect("/my_tickets/")
+        if request.session.get("status",False):   #用户已登录则跳转,上线需开启
+            return HttpResponseRedirect("/my_tickets/")
         form = LoginForm()
     return render_to_response("login.html",{"form": form,"tic_id" :tic_id},\
                   context_instance=RequestContext(request))
@@ -87,17 +88,16 @@ def tickets(request,t_type):
             make_user.tic_type = t_type
             make_user.tic_id = makemd5(str(now()) + str(make_user.make_user))
             make_user.save()
-            over_user = " "
+            over_user_list = []
             for i in cd["over_user"]:
-                over_user = str(i) + over_user
+                over_user_list.append(str(i))
                 over = UserAuth.objects.get(user=str(i))
                 a = make_user.over_user.add(over)
             make_user.save()
             sub = "From " + str(request.session.get("user")) + " To U's Tickets"
             url = str(make_user.tic_id)
-            content = "相关信息请点击链接查看并回复: http://yoogane.sunzhongwei.com:8787/reply/%s/" %url
-            print over_user
-            send = mail.send_mail(sub,content,over_user)
+            content = "相关信息请点击链接查看并回复: http://yoogane.sunzhongwei.com:8787/reply/%s/ \n\n\n本邮件由系统发出，请勿直接回复本邮件。" %url
+            send = mail.send_mail(sub,content,over_user_list)
             return HttpResponseRedirect("/my_tickets/")
     if request.session.get("status",False) and request.method == "GET":
         form = type_form[t_type]()
@@ -136,15 +136,15 @@ def reply(request,tic_id):
             AllForm.objects.filter(tic_id=tic_id).update(reply=reply.queue)
             reply.user = UserAuth.objects.get(user=str(user))
             reply.save()
-            over_user = " "
+            behind_list = []
             for i in cd["behind"]:
-                over_user = str(i) + over_user
+                behind_list.append(str(i))
                 behind_user = UserAuth.objects.get(user=str(i))
                 behind = reply.behind.add(behind_user)
             reply.save()
             sub = "From " + str(request.session.get("user")) + " Reply To U's Tickets"
-            content = "相关信息请点击链接查看并回复: http://yoogane.sunzhongwei.com:8787/reply/%s/" %tic_id 
-            send = mail.send_mail(sub,content,over_user)
+            content = "相关信息请点击链接查看并回复: http://yoogane.sunzhongwei.com:8787/reply/%s/ \n\n\n该邮件由系统发出，请勿直接回复本邮件。" %tic_id 
+            send = mail.send_mail(sub,content,behind_list)
             return HttpResponseRedirect("/my_tickets/")
     if request.session.get("status",False) and request.method == "GET":
         print request.session.get("user")
